@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>component02</title>
+     <!-- Vue.js -->
+     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    😎문자열 템플릿으로 컴포넌트 전역등록
+    <div id="app">
+        <!-- 컴포넌트 사용 -->
+        <my-component></my-component>
+    </div>
+</body>
+
+<script>
+    // 컴포넌트 정의 (문자열 템플릿)
+    const MyComponent = {
+        template : `
+            <div>
+                <h1>hello, {{name}}</h1>
+                <p>Vue component</p>
+            </div>`,
+        data() {
+            return {
+                name: '황진',
+            }
+        }
+    };
+
+    // 컴포넌트 등록 (전역등록)
+    const app = Vue.createApp({});
+    app.component("MyComponent", MyComponent);
+    app.mount('#app');
+</script>
+</html>

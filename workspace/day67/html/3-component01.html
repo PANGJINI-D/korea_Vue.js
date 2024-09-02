@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>component01</title>
+    <link rel="stylesheet" href="../css/3-component01.css">
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+</head>
+<body>
+    😎문자열 템플릿으로 컴포넌트 전역등록
+    <div id="app">
+        <main>
+            <section>
+                <!-- 컴포넌트 사용하는 부분 -->
+                <!-- 원래 없는 태그인데 사용할 태그를 새로 생성할 수 있다 -->
+                <box-component></box-component>
+                <box-component></box-component>
+                <box-component></box-component>
+                <box-component></box-component>
+            </section>
+        </main>
+    </div>
+</body>
+
+<script>
+    // 컴포넌트 정의
+    // 1. 문자열 템플릿
+    const BoxComponent = {
+        template: `
+            <article class="box">
+                <div class="box_sub"> box </div>
+                <div class="box_title">javascript</div>
+            </article> `,
+    };
+
+    // 컴포넌트 등록
+    // vue 인스턴스 생성
+    const vm = Vue.createApp({});
+    // 전역 등록
+    vm.component("BoxComponent", BoxComponent);
+    vm.mount("#app");   //id가 app인 것에 표시할 것 (mount)
+</script>
+
+
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>component03</title>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    😎싱글 파일 컴포넌트로 전역 등록하기
+    <div id="app">
+        <my-component></my-component>
+    </div>
+</body>
+
+<script>
+    fetch("../3-template03.vue")
+    .then(response => response.text())
+    .then(data => {
+        // Vue Component 정의
+        const MyComponent = {
+            template: `
+            <div>
+                <h1>Hello {{ name }}</h1>
+                <p>single file component</p>
+            </div>`,
+            data() {
+                return {
+                    name: '황진',
+                };
+            },
+        };
+
+        // Vue 인스턴스 생성하고 MyComponent 등록
+        const app = Vue.createApp({});
+        app.component("MyComponent", MyComponent);
+        app.mount("#app");
+    });
+</script>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Basic</title>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>{{msg}}</h1>
+    </div>
+    <script>
+        let msg = {msg: "hello vue"};
+        let vm = Vue.createApp({        //vm 객체는 Vue App 인스턴스의 데이터로 등록이 되어 있다.
+            name: "App",
+            data() {
+                // data() 옵션은 proxy 객체로 반응성을 제공하는 기본적인 요소이다.
+                return msg;
+            },
+        }).mount("#app");
+    </script>
+</body>
+</html>
