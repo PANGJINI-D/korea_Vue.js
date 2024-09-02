@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-if 디렉티브</title>
+    <!-- vue CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div>
+        <div id="app">
+            양수 입력 : <input type="text" v-model="number" />
+
+            <!-- 0 또는 양수를 입력할 때는 경고 이미지가 보이지 않음 -->
+            <img v-if="number <= 0" src="img/error.png" 
+            style="width: 15px; height: 15px; vertical-align: middle;" />
+        </div>
+    </div>
+
+    <script>
+        const vm = Vue.createApp({
+            data() {
+                return {number: ""};
+            },
+        }).mount("#app");
+    </script>
+</body>
+</html>

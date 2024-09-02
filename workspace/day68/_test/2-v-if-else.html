@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-if  v-else-if  v-else 디렉티브</title>
+    <!-- vue CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        회원주문금액 : <input type="text" v-model="money" />
+        <span v-if="30000 > money && money >= 10000" >브론즈등급</span>
+        <span v-else-if="50000 > money && money >= 30000">실버등급</span>
+        <span v-else-if="70000 > money && money >= 50000">골드등급</span>
+        <span v-else-if="70000 <= money">다이아등급</span>
+        <span v-else>기본등급</span>
+        <!-- v-if, v-else-if, v-else 디렉티브를 사용시에는 조건을 각각 모두 지정해야한다! -->
+      </div>
+
+    <script>
+        const vm = Vue.createApp({
+            name: "App",
+            data() {
+                return { money: 50000 };
+            },
+
+        }).mount("#app");
+    </script>
+</body>
+</html>

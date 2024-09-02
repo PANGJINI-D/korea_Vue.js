@@ -1,0 +1,286 @@
+day68 (웹개발4 15일차 / vue 4일차)
+ESLint / Prettier -> OptionAPI / CompositionAPI -> Lifecycle Hooks -> Setup hook -> 템플릿 문법 -> 디렉티브
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+[ ESLint / Prettier ] 
+
+🧡Vue 프로젝트 생성하기
+	터미널 > npm init vue@latest > 폴더 생성 후 ESLint, Prettier만 Yes
+	> cd 프로젝트명 > npm install > npm run format > npm run dev
+
+
+🧡Vue 프로젝트 구성
+	├── node_modules
+	│      └── ...
+	├── public
+	│   └── favicon.ico
+	├── src
+	│   ├── App.vue
+	│   ├── assets
+	│   │   ├── base.css
+	│   │   └── logo.svg
+	│   ├── components
+	│   │   ├── HelloWorld.vue
+	│   │   ├── TheWelcome.vue
+	│   │   ├── WelcomeItem.vue
+	│   │   └── icons
+	│   │       ├── IconCommunity.vue
+	│   │       ├── IconDocumentation.vue
+	│   │       ├── IconEcosystem.vue
+	│   │       ├── IconSupport.vue
+	│   │       └── IconTooling.vue
+	│   └── main.js
+	├── index.html
+	├── package-lock.json
+	├── package.json
+	├── README.md
+	└── vite.config.js
+
+
+🧡ESLint, Prettier 관련 파일
+	- ESLint		코드 검사기(코드에 에러가 있는지 검사하는 도구)
+	- Prettier		코드 포맷터(코드를 일관성있고 예쁘게 정렬해주는 도구)
+
+1. eslintrc.cjs
+	'plugin:vue/vue3-essential',
+		- https://eslint.vuejs.org/rules/#priority-a-essential-error-prevention-for-vue-js-3-x
+		- rule 관련
+
+	'eslint:recommended',
+		- https://eslint.org/docs/latest/rules/
+		- 표시된 항목을 자동으로 검사해주는 옵션
+
+	'@vue/eslint-config-prettier/skip-formatting'
+		- 불필요한 규칙이나 eslint와 prettier가 충돌할 수 있는 규칙을 끄는 충돌 방지용 패키지
+
+
+2. VSCode에서 ESLint 기반 Format On Save 설정하기
+	settings.json
+
+	eslint.validate		- 검사해야 하는 언어를 ESLint 확장에 알려준다.
+	editor.codeActionsOnSave	- VS Code의 저장 이벤트에 대한 훅
+	source.fixAll.eslint		- 저장중인 파일의 문제를 수정하라는 메시지 표시
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+[ Options API / Composition API ]
+
+🧡OptionsAPI
+	- Vue2에서 사용하던 방식으로, 컴포넌트의 로직을 data, method, computed, watch 등의
+	  여러 속성으로 분리하여 정의함
+	- 직관적이고 쉽다는 장점
+
+	- Vue의 필수적인 부분
+	- 복잡도가 낮거나 중간 규모의 프로젝트에서 활발히 사용된다.
+	  → 합성 API(Composition API)의 장점은 대규모 프로젝트에만 있기 때문
+
+	<template>
+	  <div>
+	    <button @click="increment">카운트:{{ counter }}</button>
+	  </div>
+	</template>
+
+	<script>
+	  export default {
+	    data() {
+	      return{
+	        counter: 0,
+	      };
+	    },
+	    methods: {
+	      increment() {
+	        this.counter++;
+	      }
+	    },
+	    mounted() {
+	      console.log("----- mount -----");
+	    },
+	  }
+	</script>
+	
+	<style scoped>
+	</style>
+
+
+🧡CompositionAPI
+	- Vue3에서 새롭게 도입된 방식으로, 로직의 재사용과 유연성을 위해 설계됨
+	- 컴포넌트의 상태와 로직을 함수 형태로 정의하고 가져와서 사용하는 방식이다.
+	- 대규모 어플리케이션에서 코드의 가독성과 유지보수를 개선할 수 있다는 장점
+	- 옵션(data, methods, ..)을 선언하는 대신 함수(ref, onMounted, ...)를 사용하여 
+	  Vue 컴포넌트를 작성할 수 있는 API 세트를 의미함
+
+	** 반응형 API
+	** 라이프 사이클 훅 (Lifecycle Hooks)		Lifecycle 단계에서 실행되는 함수들
+	** 종속성 주입 (Dependency Injection)
+
+	  <script>
+	    import {onMounted, ref} from 'vue';
+	
+	    export default {
+	      setup(){
+	        const counter = ref(0);
+
+	        const increment = () => counter.value++;
+
+	        onMounted(() => {
+	          console.log("-----mount-----");
+	        });
+
+	        return {
+	          counter, increment,
+	        };
+	      },
+	    };
+	</script>
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+[ Lifecycle Hooks ]
+	- Vue.js의 라이프 사이클 훅은 컴포넌트가 생성되고
+	  DOM에 마운트, 업데이트, 소멸되는 과정에서 특정 시점에 호출되는 메서드들을 의미한다.
+	- Hook의 상태를 통해 개발자는 컴포넌트의 상태와 동작을 제어할 수 있다.
+
+
+🧡Lifecycle 전체 흐름
+	인스턴스 생성		beforeCreate
+	화면에 반응성 주입		created
+	컴파일된 템플릿이 있다면 템플릿 컴파일
+	초기 렌더링		DOM 노트 생성 및 삽입 -> beforeMount -> mounted
+	데이터 변경 		-> beforeUpdate -> DOM 업데이트 -> updated
+	인스턴스 소멸		-> beforeDestroy -> destroyed
+
+
+🧡setup( ) 함수
+	- CompositionAPI의 핵심
+	- 컴포넌트의 초기 상태를 설정하고 반응형 데이터 정의, 로직을 캡슐화 할 수 있는 함수
+	- 컴포넌트가 생성될 때 가장 먼저 실행됨
+	- Vue2에서 사용하던 라이프사이클 훅과 비슷한 역할 수행
+
+	기능	- 반응형 데이터 정의 : ref, reactive를 사용하여 반응형 상태 정의가 가능
+		- 컴포넌트 초기설정 : 컴포넌트에서 사용할 상태(state), 메서드(methods), 속성(computed properties)
+				   등을 정의하고 반환 가능
+		- 라이프사이클 훅 사용 : setup( ) 내부에서 CompositionAPI 전용 라이프사이클 훅을 사용 가능함
+
+
+1. beforeCreate (인스턴스 생성)
+	- Vue 인스턴스가 생성되기 전에 호출됨
+	- 데이터가 반응형으로 설정되지 않았고, 컴포넌트으 데이터와 메서드에 접근할 수 없다.
+
+
+2. created
+	- Vue 인스턴스가 생성되고 나서 호출됨
+	- 데이터가 반응형으로 설정되고 컴포넌트의 데이터, 메서드, 컴포넌트 내의 다른 모든 요소에 접근할 수 있다.
+
+
+3. beforeMount
+	- 컴포넌트가 DOM에 마운트 되기 전에 호출된다.
+	- DOM에 렌더링되지 않은 상태이다.
+
+
+4. mounted
+	- 컴포넌트가 DOM에 마운트 된 후에 호출된다.
+	- 컴포넌트의 DOM 요소에 접근할 수 있으며 초기화 작업이 배치된다.
+
+
+5. beforeUpdate
+	- 컴포넌트의 반응형 데이터가 변경되어서 DOM이 업데이트 되기 전에 호출한다.
+	- 업데이트가 발생하기 전에 작업 처리가 가능하다.
+
+
+6. Update
+	- 컴포넌트의 DOM이 업데이트 된 후에 호출된다.
+	- 데이터가 변경되어 새로운 상태로 렌더링 완료된 후를 의미한다.
+
+
+7. beforeDestroy
+	- Vue 인스턴스가 소멸되기 전에 호출된다.
+	- 타이머 또는 이벤트 리스너를 정리할 수 있다.
+
+
+8. destroy
+	- Vue 인스턴스가 소멸된 후에 호출된다.
+	- 모든 디렉티브와 데이터 바인딩이 해제되고 컴포넌트의 모든 하위 인스턴스가 소멸된다.
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+[ 템플릿 문법 Template Syntax ]
+	- Vue는 템플릿 문법을 사용하여 렌더링된 DOM을 컴포넌트 인스턴스 데이터에 선언적으로 바인딩 할 수 있음
+
+
+🧡텍스트 보간법 {{ }}
+	- 데이터 바인딩의 가장 기본 형태 {{ data }}
+	- 컴포넌트 인스턴스의 message 값으로 대체됨
+	- message 속성이 변경될 때 마다 갱신됨
+
+	v-once 디렉티브를 사용하여 데이터가 변경되어도 갱신되지 않는 일회성 보간 수행 가능
+	ex.  <p v-once> 이름 : {{ name }} </p>
+	      → 이름이 변경되어도 기존의 이름이 들어가있음.
+
+
+🧡속성 바인딩 (v-bind)
+	- 이중 중괄호는 html 속성에 사용할 수 없음
+	- v-bind 디렉티브로 사용할 수 있다
+	  ex. 	<div v-bind:title="onMouse">마우스를 올려보세욤</div>
+	       	<input type="text" v-bind:disabled="idInputDisabled" />
+
+	  단축
+		<div :title="onMouse">마우스를 올려보세욤</div>
+		<input type="text" :disabled="idInputDisabled" />
+
+	  다중 바인딩(객체의 여러 속성을 한번에 바인딩)
+		const attrs = {
+			id: "user-id",
+			type: "text",
+			placeholder: "아이디를 입력하세요.",
+		}
+		<input v-bind="attrs" />	//단일요소에 한 번에 여러 속성 바인딩
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+[ 디렉티브 Directive ]
+	- Vue.js에서 디렉티브는 HTML 요소의 동작을 확장하거나 DOM을 조작할 수 있는 특별한 속성이다.
+	- v-로 시작하며 특정 동작을 수행하는 데 사용한다.
+
+🧡v-bind
+	- HTML 속성에 Vue의 데이터를 바인딩 할 때 사용
+	- 축약형으로 v-bind를 생략하고 :으로 사용할 수 있음
+
+🧡v-on
+	- DOM 이벤트를 Vue 메서드에 연결할 때 사용
+	- 축약형으로 @
+
+🧡v-if  /  v-else-if   /   v-else   ★★
+	- 조건에 따라 DOM 요소를 렌더링하거나 제거 가능
+
+🧡v-show
+	- 조건에 따라 요소의 display 속성을 toggle
+	- display:none	요소를 숨길 수는 있지만 DOM에서 제거되는 것은 아님
+
+🧡v-for
+	- 배열이나 객체의 아이템 목록을 반복적으로 렌더링할 때 사용
+
+🧡v-model
+	- 양방향 데이터 바인딩 제공
+
+🧡v-html
+	- 데이터의 html 문자열을 실제 html로 렌더링함
+	- XSS(사이트 간 스크립팅) 공격에 취약함
+
+🧡v-text
+	- 요소의 textContent를 설정함
+	- 텍스트 내용을 설정하는 데 사용, 중괄호와 유사함
+
+🧡v-once
+	- 요소나 컴포넌트의 초기 렌더링만 수행하고, 이후 업데이트는 무시함
+
+
+

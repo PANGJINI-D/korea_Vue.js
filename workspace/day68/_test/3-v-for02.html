@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-for object</title>
+    <!-- vue CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+      <select id="regions">
+        <option disabled="disabled" selected>지역을 선택하세요</option>
+        <option v-for="(val, key) in regions" :value="key" :key="key">
+          {{val}}
+        </option>
+      </select>
+    </div>
+    <script>
+      const vm = Vue.createApp({
+        name:"App",
+        data(){
+          return {
+            regions:{
+              A:"서울",
+              B:"대전",
+              C:"경기",
+              D:"강원",
+            },
+          };
+        },
+      }).mount("#app");
+    </script>
+  
+</body>
+</html>

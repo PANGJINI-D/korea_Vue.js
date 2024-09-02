@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-bind 디렉티브</title>
+    <!-- vue CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="text" placeholder="입력~~" />
+        <input type="text" v-bind:placeholder="msg" />
+        <hr>
+        <button v-on:click="reverseMsg">클릭</button>
+        <h2>{{username}}</h2>
+        <input type="text" v-bind:value="username" />
+    </div>
+
+    <script>
+        let app = Vue.createApp({
+            name: "App",
+            data(){
+                return {
+                    msg: "값을 입력하세요.",
+                    username: "짱구",
+                }
+            },
+            methods: {
+                print() {
+                    alert("하윙");
+                },
+                reverseMsg() {
+                    this.msg = this.msg.split("").reverse().join("");
+                },
+            },
+        });
+        app.mount("#app");
+    </script>
+</body>
+</html>
